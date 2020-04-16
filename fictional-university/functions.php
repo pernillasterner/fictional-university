@@ -1,5 +1,41 @@
 <?php
 
+// ADD DIFFERENT B-IMG TO PAGE BANNER
+function pageBanner( $args = NULL ) { 
+
+  // Faulback if no title is provided
+  if (!isset($args['title'])) {
+    $args['title'] = get_the_title(); // Value in the databas
+  }
+  
+  if (!isset($args['subtitle'])) {
+    $args['subtitle'] = get_field('page_banner_subtitle');
+  }
+
+  if (!isset($args['photo'])) {
+    if(get_field('page_banner_background_image')) {
+      $args['photo'] = get_field('page_banner_background_image')['sizes']['pageBanner'];
+    } else {
+      $args['photo'] = get_theme_file_uri('/images/ocean.jpg');
+    }
+  }
+?>
+
+  <?php $pageBannerImage = get_field('page_banner_background_image'); ?>
+    <div class="page-banner">
+      <div class="page-banner__bg-image" style="background-image: url(<?php echo $args['photo'] ?>);"></div>
+      <div class="page-banner__content container container--narrow">
+        <h1 class="page-banner__title"><?php echo $args['title']; ?></h1>
+        <div class="page-banner__intro">
+          <p><?php echo $args['subtitle']; ?></p>
+        </div>
+      </div>  
+    </div>
+
+<?php }
+
+
+
 // LOAD FILES
 function university_files() {
   wp_enqueue_script('main-university-js', get_theme_file_uri('/js/scripts-bundled.js'), NULL, microtime(), true);
@@ -10,7 +46,7 @@ function university_files() {
 add_action('wp_enqueue_scripts', 'university_files');
 
 
-
+// THEME SUPPORT
 function university_features() {
   // register_nav_menu('headerMenuLocation', 'Header Menu Location');
   // register_nav_menu('footerLocationOne', 'Footer Location One');
